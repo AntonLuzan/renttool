@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои аренды — RentTool</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f5f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #333;
+        }
+
+        header {
+            background: #0066cc;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 26px;
+            text-align: center;
+            color: #222;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #f0f2f5;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #eee;
+        }
+
+        .finished {
+            color: #999;
+            text-decoration: line-through;
+            background: #f8f8f8;
+        }
+
+        .empty {
+            text-align: center;
+            font-size: 18px;
+            color: #777;
+            margin: 40px 0;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background: #0066cc;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .btn:hover {
+            background: #0050a5;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        footer {
+            background: #222;
+            color: #bbb;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔧 RentTool</h1>
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/cart">🛒 Корзина</a>
+        <a href="/profile">Профиль</a>
+        <a href="/logout">Выйти</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h2>📄 Мои аренды</h2>
+
+    <table th:if="${!rentals.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Фото</th>
+            <th>Инструмент</th>
+            <th>Дата начала</th>
+            <th>Дата окончания</th>
+            <th>Стоимость</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="rental : ${rentals}"
+            th:classappend="${rental.endDate < T(java.time.LocalDate).now()} ? 'finished' : ''">
+
+            <td>
+                <img th:if="${rental.tool.imageData != null}"
+                     th:src="@{'/tools/image/' + ${rental.tool.id}}">
+                <span th:if="${rental.tool.imageData == null}">—</span>
+            </td>
+
+            <td th:text="${rental.tool.name}"></td>
+            <td th:text="${rental.startDate}"></td>
+            <td th:text="${rental.endDate}"></td>
+            <td th:text="${rental.totalPrice} + ' BYN'"></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <div class="empty" th:if="${rentals.isEmpty()}">
+        У вас пока нет аренд
+    </div>
+
+    <div class="actions">
+        <a href="/" class="btn">← К инструментам</a>
+        <a href="/profile" class="btn btn-secondary">Профиль</a>
+    </div>
+
+</div>
+
+<footer>
+    © 2025 RentTool — аренда инструментов.
+    <br>
+    <a href="/contacts">Контакты</a> | <a href="/about">О сервисе</a>
+</footer>
+
+</body>
+</html>

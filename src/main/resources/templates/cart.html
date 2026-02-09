@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина — RentTool</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f6fa;
+        }
+
+        header {
+            background: #0066cc;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        nav a:hover { opacity: .8; }
+
+        .container {
+            flex: 1;
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+
+        h2 { margin-top: 0; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            background: #0066cc;
+            color: #fff;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-danger { background: #dc3545; }
+        .btn-secondary { background: #6c757d; }
+
+        .total {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            font-size: 18px;
+            color: #777;
+            margin: 60px 0;
+        }
+
+        footer {
+            background: #222;
+            color: #bbb;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔧 RentTool</h1>
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/profile">Профиль</a>
+        <a href="/logout">Выйти</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h2>🛒 Ваша корзина</h2>
+
+    <div th:if="${#lists.isEmpty(cart)}" class="empty">
+        Корзина пуста 😔 <br><br>
+        <a href="/" class="btn btn-secondary">← К инструментам</a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(cart)}">
+
+        <table>
+            <thead>
+            <tr>
+                <th>Инструмент</th>
+                <th>Дата начала</th>
+                <th>Дата окончания</th>
+                <th>Цена / день</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart}">
+                <td th:text="${item.tool.name}"></td>
+                <td th:text="${item.startDate}"></td>
+                <td th:text="${item.endDate}"></td>
+                <td th:text="${item.tool.pricePerDay} + ' BYN'"></td>
+                <td>
+                    <a th:href="@{'/cart/remove/' + ${item.tool.id}}"
+                       class="btn btn-danger">Удалить</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="total">
+            💰 Общая сумма: <span th:text="${total}"></span> BYN
+        </div>
+
+        <br>
+
+        <form th:action="@{/cart/checkout}" method="post">
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+            <button type="submit" class="btn">Оформить аренду</button>
+        </form>
+
+        <br>
+        <a href="/" class="btn btn-secondary">← Назад</a>
+    </div>
+</div>
+
+<footer>
+    © 2025 RentTool — аренда инструментов.
+</footer>
+
+</body>
+</html>

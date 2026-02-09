@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>О нас — RentTool</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #f5f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #333;
+        }
+
+        header {
+            background: #0066cc;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .hero {
+            background: url('/images/about-bg.jpg') center/cover no-repeat;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+
+        .section {
+            max-width: 1000px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .section h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .section p {
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            color: #444;
+        }
+
+        .features {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .feature-box {
+            flex: 1 1 280px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+
+        .feature-box h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #0066cc;
+        }
+
+        .feature-box p {
+            font-size: 15px;
+            color: #555;
+        }
+
+        .btn-main {
+            background: #0066cc;
+            color: #fff;
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 25px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .btn-main:hover {
+            background: #0050a5;
+        }
+
+        footer {
+            background: #222;
+            color: #bbb;
+            padding: 20px 0;
+            margin-top: 55px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🔧 RentTool</h1>
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/tools">Инструменты</a>
+        <a href="/contacts">Контакты</a>
+        <a href="/about">О нас</a>
+        <span th:if="${#authentication != null and #authentication.principal != 'anonymousUser'}">
+            <a href="/cart">🛒 Корзина</a>
+            <a href="/logout">Выйти</a>
+        </span>
+        <span th:if="${#authentication == null or #authentication.principal == 'anonymousUser'}">
+            <a href="/login">Войти</a>
+            <a href="/register">Регистрация</a>
+        </span>
+    </nav>
+</header>
+
+<div class="hero">
+    ⛏️ О RentTool — аренда инструментов быстро и удобно
+</div>
+
+<div class="section">
+    <h2>Наша миссия</h2>
+    <p>
+        RentTool создан для того, чтобы сделать аренду инструментов доступной, понятной и выгодной.
+        Больше не нужно покупать дорогостоящую технику для разовых задач — просто возьми её напрокат
+        на нужные дни и экономь.
+    </p>
+
+    <h2>Почему выбирают нас</h2>
+    <div class="features">
+        <div class="feature-box">
+            <h3>Большой ассортимент</h3>
+            <p>У нас вы найдёте ручной и электрический инструмент для любых задач: от ремонта до строительства.</p>
+        </div>
+
+        <div class="feature-box">
+            <h3>Гибкие условия</h3>
+            <p>Выбирайте удобные даты аренды и отменяйте бронирование без дополнительных сборов.</p>
+        </div>
+
+        <div class="feature-box">
+            <h3>Удобный сервис</h3>
+            <p>Простой интерфейс, быстрый поиск и оформленный заказ за пару кликов — экономим ваше время.</p>
+        </div>
+    </div>
+
+    <p>
+        Наша команда постоянно работает над улучшением сервиса, чтобы аренда инструментов приносила
+        только положительные эмоции.
+    </p>
+
+    <a href="/tools" class="btn-main">Посмотреть инструменты</a>
+</div>
+
+<footer>
+    © 2025 RentTool — аренда инструментов.
+    <br>
+    <a href="/contacts">Связаться с нами</a> | <a href="/about">О нас</a>
+</footer>
+
+</body>
+</html>

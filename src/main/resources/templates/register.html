@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация — RentTool</title>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background: #f5f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        header {
+            background: #0066cc;
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            opacity: .85;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .register-container {
+            max-width: 450px;
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 26px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin: 15px 0 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            opacity: .9;
+            transform: translateY(-1px);
+        }
+
+        .login-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #222;
+            color: #bbb;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>RentTool</h1>
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/login">Вход</a>
+    </nav>
+</header>
+
+<main>
+    <div class="register-container">
+        <h2>Регистрация</h2>
+        <form th:action="@{/register}" method="post" th:object="${user}">
+            <label>Имя пользователя:</label>
+            <input type="text" th:field="*{username}" required>
+
+            <label>Email:</label>
+            <input type="email" th:field="*{email}" required>
+
+            <label>Телефон:</label>
+            <input type="tel" th:field="*{phone}" placeholder="+375 (__) ___-__-__" required>
+
+            <label>Пароль:</label>
+            <input type="password" th:field="*{password}" required>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <a href="/login" class="login-link">Уже есть аккаунт? Войти</a>
+    </div>
+</main>
+
+<footer>
+    © 2025 RentTool — аренда инструментов.
+    <br>
+    <a href="/contacts">Связаться с нами</a> | <a href="/about">О сервисе</a>
+</footer>
+
+</body>
+</html>

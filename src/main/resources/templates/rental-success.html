@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Аренда успешно оформлена</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            text-align: center;
+            padding: 40px;
+        }
+
+        h2 {
+            color: #28a745;
+        }
+
+        table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            width: 80%;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .summary {
+            margin-top: 30px;
+            font-size: 1.2em;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h2 th:text="${message}">✅ Аренда оформлена!</h2>
+
+<table th:if="${not #lists.isEmpty(rentals)}">
+    <thead>
+    <tr>
+        <th>Фото</th>
+        <th>Инструмент</th>
+        <th>Начало</th>
+        <th>Окончание</th>
+        <th>Стоимость</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="rental : ${rentals}">
+        <td>
+            <img th:if="${rental.tool.imageData != null}"
+                 th:src="@{'/tools/image/' + ${rental.tool.id}}"
+                 alt="Фото">
+            <span th:if="${rental.tool.imageData == null}">—</span>
+        </td>
+        <td th:text="${rental.tool.name}"></td>
+        <td th:text="${rental.startDate}"></td>
+        <td th:text="${rental.endDate}"></td>
+        <td th:text="${rental.totalPrice + ' BYN'}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<p class="summary">
+    Общая сумма:
+    <b th:text="${total + ' BYN'}"></b>
+</p>
+
+<a href="/" class="btn">← Вернуться к инструментам</a>
+
+</body>
+</html>

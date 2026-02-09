@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи — RentTool</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f5f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #333;
+        }
+
+        header {
+            background: #0066cc;
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            opacity: .85;
+        }
+
+
+        .page-container {
+            flex: 1;
+            max-width: 1100px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin: 0 0 25px 0;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #e9eef5;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        .role {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .role.admin { color: #dc3545; }
+        .role.user { color: #28a745; }
+
+        .phone {
+            font-family: monospace;
+        }
+
+        .btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        .btn-edit { background: #007bff; }
+        .btn-delete { background: #dc3545; }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+
+        footer {
+            background: #222;
+            color: #bbb;
+            padding: 15px 0;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<header>
+    <h1>🔧 RentTool — Админ панель</h1>
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/admin/tools">Инструменты</a>
+        <a href="/admin/users">Пользователи</a>
+        <a href="/admin/rentals">Аренды</a>
+        <a href="/logout">Выйти</a>
+    </nav>
+</header>
+
+<div class="page-container">
+
+    <h2>👤 Пользователи</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Роль</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+
+            <td class="phone"
+                th:text="${user.phone != null ? user.phone : '—'}">
+            </td>
+
+            <td>
+                <span class="role"
+                      th:classappend="${user.role == 'ADMIN'} ? 'admin' : 'user'"
+                      th:text="${user.role}">
+                </span>
+            </td>
+
+            <td class="actions">
+                <a th:href="@{'/admin/users/edit/' + ${user.id}}"
+                   class="btn btn-edit">✏️</a>
+
+                <a th:href="@{'/admin/users/delete/' + ${user.id}}"
+                   class="btn btn-delete"
+                   onclick="return confirm('Удалить пользователя?')">🗑</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<footer>
+    © 2025 RentTool — аренда инструментов.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${tool.name}">Инструмент</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f5f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #333;
+        }
+
+        /* основной контент */
+        .main-content {
+            flex: 1;
+        }
+
+
+        header {
+            background: #0066cc;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+
+        .tool-image {
+            width: 100%;
+            max-height: 380px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #eee;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 26px;
+            color: #222;
+            font-weight: 600;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #555;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .price {
+            font-size: 20px;
+            color: #008000;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status {
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .not-available {
+            color: #c40000;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #004f9a;
+        }
+
+        .btn-back {
+            background: #6c757d;
+        }
+
+        .btn-back:hover {
+            background: #565e64;
+        }
+
+        footer {
+            background: #222;
+            color: #bbb;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔧 RentTool</h1>
+
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/about">О сервисе</a>
+        <a href="/contacts">Контакты</a>
+
+        <span th:if="${#authentication == null or #authentication.principal == 'anonymousUser'}">
+            <a href="/login">Войти</a>
+            <a href="/register">Регистрация</a>
+        </span>
+
+        <span th:if="${#authentication != null and #authentication.principal != 'anonymousUser'}">
+            <a href="/cart">🛒 Корзина</a>
+            <a href="/logout">Выйти</a>
+        </span>
+    </nav>
+</header>
+
+
+<div class="main-content">
+    <div class="container">
+        <h2 th:text="${tool.name}"></h2>
+
+        <img class="tool-image"
+             th:if="${tool.imageData != null}"
+             th:src="@{'/tools/image/' + ${tool.id} + '?v=' + ${tool.id}}">
+
+        <img class="tool-image"
+             th:if="${tool.imageData == null}"
+             src="/images/no-photo.png">
+
+        <div class="description" th:text="${tool.description}"></div>
+
+        <div class="price" th:text="${tool.pricePerDay} + ' BYN/день'"></div>
+
+        <div class="status">
+            <span th:if="${tool.available}">Доступен для аренды</span>
+            <span th:if="${!tool.available}" class="not-available">Недоступен</span>
+        </div>
+
+        <a th:href="@{'/rental/new/' + ${tool.id}}"
+           class="btn"
+           th:if="${tool.available}">Арендовать</a>
+
+        <a href="/" class="btn btn-back">Назад</a>
+    </div>
+</div>
+
+<footer>
+    © 2025 RentTool — аренда инструментов.
+    <br>
+    <a href="/contacts">Связаться с нами</a> | <a href="/about">О сервисе</a>
+</footer>
+
+</body>
+</html>

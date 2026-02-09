@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>RentTool — аренда инструментов</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #f5f6fa;
+            color: #333;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        header {
+            background: #0066cc;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .filter-bar {
+            position: sticky;
+            top: 70px;
+            z-index: 950;
+            background: #fff;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        .filter-bar input,
+        .filter-bar select,
+        .filter-bar button {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .filter-bar button {
+            background: #0066cc;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .filter-bar button:hover {
+            background: #004f9a;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+            padding-bottom: 40px;
+        }
+
+        .tool-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.20s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .tool-card img {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .tool-card h3 {
+            margin: 12px 0 6px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #555;
+            min-height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: auto;
+            color: #008000;
+        }
+
+        .btn {
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: #0066cc;
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #004f9a;
+        }
+
+        .not-available {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #d00;
+            font-weight: bold;
+        }
+
+        footer {
+            background: #222;
+            color: #bbb;
+            padding: 20px 0;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🔧 RentTool</h1>
+    <nav>
+        <a href="/">Главная</a>
+
+        <span sec:authorize="isAnonymous()">
+            <a href="/login">Войти</a>
+            <a href="/register">Регистрация</a>
+        </span>
+
+
+        <span sec:authorize="isAuthenticated()">
+            <a href="/profile">👤 Профиль</a>
+            <a href="/my-rentals">📄 Мои аренды</a>
+            <a href="/cart">🛒 Корзина</a>
+            <a href="/logout">Выйти</a>
+        </span>
+    </nav>
+</header>
+
+
+
+<form class="filter-bar" method="get" action="/">
+    <input type="text" name="search" placeholder="Поиск..." th:value="${search}">
+    <select name="sort">
+        <option value="">Без сортировки</option>
+        <option value="priceAsc" th:selected="${sort == 'priceAsc'}">Цена ↑</option>
+        <option value="priceDesc" th:selected="${sort == 'priceDesc'}">Цена ↓</option>
+    </select>
+    <button type="submit">Применить</button>
+</form>
+
+<div class="container">
+    <div class="tools-grid">
+        <div class="tool-card" th:each="tool : ${tools}">
+            <img th:if="${tool.imageData != null}"
+                 th:src="@{'/tools/image/' + ${tool.id} + '?v=' + ${tool.id}}">
+
+            <img th:if="${tool.imageData == null}"
+                 src="/images/no-photo.png">
+
+            <h3 th:text="${tool.name}"></h3>
+            <p class="description" th:text="${tool.description}"></p>
+            <div class="price" th:text="${tool.pricePerDay} + ' BYN/день'"></div>
+
+            <div class="not-available" th:if="${!tool.available}">Нет в наличии</div>
+
+            <a th:href="@{'/tool/' + ${tool.id}}" class="btn">Подробнее</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    © 2025 RentTool — аренда инструментов.
+    <br>
+    <a href="/contacts">Связаться с нами</a> | <a href="/about">О сервисе</a>
+</footer>
+
+</body>
+</html>

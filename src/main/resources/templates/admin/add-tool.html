@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${tool.id == null} ? 'Добавить инструмент — Админ' : 'Редактировать инструмент — Админ'"></title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f5f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #333;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        header {
+            background: #0066cc;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            opacity: .85;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        input[type="text"],
+        textarea {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.2);
+            margin-right: 8px;
+        }
+
+        input[type="file"] {
+            font-size: 14px;
+        }
+
+        img {
+            max-width: 180px;
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: block;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .btn-save {
+            background: #28a745;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .btn-back {
+            background: #6c757d;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        footer {
+            background: #222;
+            color: #bbb;
+            padding: 15px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔧 RentTool — Админ</h1>
+    <nav>
+        <a href="/admin/tools">Инструменты</a>
+        <a href="/admin/users">Пользователи</a>
+        <a href="/admin/rentals">Аренды</a>
+        <a href="/login">Выйти</a>
+    </nav>
+</header>
+
+<main>
+
+    <div class="container">
+
+        <h2 th:text="${tool.id == null}
+            ? '➕ Добавить инструмент'
+            : '✏️ Редактировать инструмент'"></h2>
+
+        <form th:action="@{/admin/tools/save}"
+              th:object="${tool}"
+              method="post"
+              enctype="multipart/form-data">
+
+            <input type="hidden" th:field="*{id}">
+
+            <label>Название</label>
+            <input type="text" th:field="*{name}" placeholder="Например: Перфоратор" required>
+
+            <label>Описание</label>
+            <textarea th:field="*{description}" rows="4"
+                      placeholder="Краткое описание инструмента"></textarea>
+
+            <label>Цена за день (BYN)</label>
+            <input type="text"
+                   th:field="*{pricePerDay}"
+                   placeholder="Например: 25.00"
+                   pattern="\d+(\.\d{1,2})?"
+                   required>
+
+            <label>
+                <input type="checkbox" th:field="*{available}">
+                Доступен для аренды
+            </label>
+
+            <label>Изображение</label>
+            <input type="file" name="imageFile" accept="image/*">
+
+            <div th:if="${tool.imageData != null}">
+                <p><b>Текущее изображение:</b></p>
+                <img th:src="@{'/tools/image/' + ${tool.id}}">
+            </div>
+
+            <div class="actions">
+                <a href="/admin/tools" class="btn btn-back">← Назад</a>
+                <button type="submit" class="btn btn-save">💾 Сохранить</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+<footer>
+    © 2025 RentTool — админ-панель
+</footer>
+
+</body>
+</html>
